@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "EcoPonto API",
+    "description": "Coleção de requisições para a API do EcoPonto",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Doadores",
+      "item": [
+        {
+          "name": "Criar Doador",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"senha\": \"senha123\",\n  \"telefone\": \"(11) 99999-9999\",\n  \"cpf\": \"123.456.789-00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/doadores",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doadores"]
+            }
+          }
+        },
+        {
+          "name": "Listar Doadores",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/doadores",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doadores"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Doador por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/doadores/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "doadores", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Itens",
+      "item": [
+        {
+          "name": "Criar Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"material\": \"Plástico\",\n  \"pesoEmKg\": 2.5,\n  \"qtdVolume\": 10,\n  \"enderecoRetirada\": \"Rua das Flores, 123\",\n  \"doadorId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/itens",
+              "host": ["{{base_url}}"],
+              "path": ["api", "itens"]
+            }
+          }
+        },
+        {
+          "name": "Listar Itens",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/itens",
+              "host": ["{{base_url}}"],
+              "path": ["api", "itens"]
+            }
+          }
+        },
+        {
+          "name": "Listar Itens por Doador",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/itens/doador/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "itens", "doador", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Associações",
+      "item": [
+        {
+          "name": "Criar Associação",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Associação Verde\",\n  \"cnpj\": \"12.345.678/0001-90\",\n  \"email\": \"contato@verde.org\",\n  \"phone\": \"(11) 8888-8888\",\n  \"address\": \"Av. Sustentável, 456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/associacoes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "associacoes"]
+            }
+          }
+        },
+        {
+          "name": "Listar Itens Disponíveis",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/associacoes/itens-disponiveis",
+              "host": ["{{base_url}}"],
+              "path": ["api", "associacoes", "itens-disponiveis"]
+            }
+          }
+        },
+        {
+          "name": "Coletar Item",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/associacoes/1/coletar/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "associacoes", "1", "coletar", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:9899"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ecoponto-postgres
+    environment:
+      POSTGRES_DB: ecoponto
+      POSTGRES_USER: ecoponto_user
+      POSTGRES_PASSWORD: ecoponto_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecoponto-network
+
+  app:
+    build: .
+    container_name: ecoponto-app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ecoponto
+      DB_USER: ecoponto_user
+      DB_PASS: ecoponto_pass
+    ports:
+      - "9899:9899"
+    depends_on:
+      - postgres
+    networks:
+      - ecoponto-network
+    volumes:
+      - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
+
+volumes:
+  postgres_data:
+
+networks:
+  ecoponto-network:
+    driver: bridge
