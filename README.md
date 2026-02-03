@@ -1,6 +1,8 @@
-# EcoPonto
+# ♻️ EcoPonto
 
-Sistema de gestão de coleta seletiva que conecta doadores de materiais recicláveis a associações de reciclagem.
+O EcoPonto é um sistema de gestão para coleta seletiva que conecta doadores de materiais recicláveis a associações de reciclagem. O objetivo é facilitar o descarte correto de resíduos e fortalecer as associações locais.
+
+🎓 Este projeto foi desenvolvido como exercício acadêmico da disciplina de Desenvolvimento Back-end, com o intuito de aplicar conceitos de arquitetura de software, segurança e persistência de dados.
 
 ---
 
@@ -10,153 +12,175 @@ O EcoPonto facilita a doação de materiais recicláveis, permitindo que:
 
 - ♻️ **Doadores** registrem itens disponíveis para coleta  
 - 🏭 **Associações** visualizem e coletem materiais  
-- 🌱 **Comunidade** contribua para a sustentabilidade ambiental  
-
-### 🌍 Valor Social
-
-- Redução do desperdício por meio da reutilização  
-- Apoio a associações de reciclagem locais  
-- Maior acesso a materiais recicláveis  
-- Promoção da consciência ambiental  
 
 ---
 
-## 🧩 Pré-requisitos
+## 🛠️ Tecnologias Utilizadas
 
-- **Java 17+**
-- **Maven 3.6+** (ou usar `mvnw`)
-- **PostgreSQL** (ou Docker)
+| Categoria        | Tecnologia                                          |
+|------------------|-----------------------------------------------------|
+| Linguagem        | Java 17                                             |
+| Framework        | Spring Boot 3+ (Data JPA, Security, Validation)     |
+| Segurança        | Spring Security + JWT (JSON Web Token)              |
+| Banco de Dados   | H2 Database (Desenvolvimento) / PostgreSQL (Produção) |
+| Documentação     | Swagger (OpenAPI 3)                                 |
+| Containerização  | Docker & Docker Compose                             |
 
 ---
 
-## ⚙️ Configuração do Ambiente
+## 📁 Estrutura do Projeto
 
-### 1. Copiar arquivo de configuração
+Abaixo, a organização dos principais pacotes do sistema:
+
+```
+EcoPonto/
+├── src/main/java/com/backend/ecoponto/
+│   ├── controller/   # Endpoints (Auth, Itens, Associações)
+│   ├── service/      # Regras de negócio e UserDetails
+│   ├── security/     # Filtros JWT e Configurações de Segurança
+│   ├── model/        # Entidades JPA (Usuario, Item, etc)
+│   ├── repository/   # Interfaces de acesso ao banco
+│   ├── dto/          # Objetos de transferência de dados (Create, Response, Login)
+│   ├── mapper/       # Conversão entre Entidades e DTOs
+│   └── exception/    # Manipulação global de erros
+├── src/main/resources/
+│   ├── application-DEV.properties  # Configuração banco H2
+│   └── application-PRD.properties  # Configuração banco PostgreSQL
+├── Dockerfile                      # Configuração da imagem Docker
+└── docker-compose.yml              # Orquestração da App + Banco Postgres
+```
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### Opção 1: Via Docker (Recomendado)
+
+Esta opção sobe a aplicação e o banco de dados PostgreSQL automaticamente.
+
+1. Certifique-se de ter o **Docker** instalado.
+2. Na raiz do projeto, execute:
 
 ```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
+docker-compose up --build
 ```
 
-### 2. Configurar variáveis de ambiente
-
-#### Linux/macOS
-
-```bash
-export DB_HOST=localhost
-export DB_PORT=5432
-export DB_NAME=ecoponto
-export DB_USER=seu_usuario
-export DB_PASS=sua_senha
-```
-
-#### Windows (CMD)
-
-```cmd
-set DB_HOST=localhost
-set DB_PORT=5432
-set DB_NAME=ecoponto
-set DB_USER=seu_usuario
-set DB_PASS=sua_senha
-```
-
-#### Windows (PowerShell)
-
-```powershell
-$env:DB_HOST="localhost"
-$env:DB_PORT="5432"
-$env:DB_NAME="ecoponto"
-$env:DB_USER="seu_usuario"
-$env:DB_PASS="sua_senha"
-```
+3. Acesse em: `http://localhost:9899`
 
 ---
 
-## 🚀 Executar a Aplicação
+### Opção 2: Localmente (Perfil de Desenvolvimento)
 
-### Linux/macOS
+Usa o banco **H2** (em arquivo local) para facilitar os testes rápidos.
+
+1. Execute o comando Maven:
 
 ```bash
-./mvnw spring-boot:run
+./mvnw spring-boot:run -Dspring-boot.run.profiles=DEV
 ```
 
-### Windows
-
-```cmd
-mvnw.cmd spring-boot:run
-```
-
-A aplicação estará disponível em: 👉 http://localhost:9899
+2. O console do banco H2 estará disponível em:
+   - **URL:** `http://localhost:9899/h2-console`
+   - **JDBC URL:** `jdbc:h2:file:./data/ecoponto-dev`
 
 ---
 
-## 📚 Documentação da API
+## 🔐 Autenticação e Segurança
 
-Acesse via Swagger: 👉 http://localhost:9899/swagger-ui.html
+A API utiliza **JWT**. Exceto pelos endpoints abaixo, todas as rotas exigem o header `Authorization`.
+
+### Rotas Públicas
+
+| Método | Endpoint                    | Descrição                  |
+|--------|-----------------------------|----------------------------|
+| POST   | `/api/auth/registrar`       | Criação de conta           |
+| POST   | `/api/auth/login`           | Geração de Token           |
+| POST   | `/api/associacoes`          | Cadastro de nova associação |
+| GET    | Swagger UI                  | Documentação interativa    |
+| GET    | H2 Console                  | Console do banco (DEV)     |
+
+---
+## 🔄 Fluxo do Sistema
+
+1. **Cadastro e Login**: Usuários se registram como Doadores ou Associações.
+2. **Publicação de Itens**: O Doador cadastra materiais (ex: papelão, plástico) detalhando peso e local de retirada.
+3. **Gerenciamento de Coletas**: Associações visualizam os itens disponíveis no sistema para planejar suas rotas de coleta.
+4. **Sustentabilidade**: O sistema conecta as pontas, garantindo que o resíduo chegue ao destino correto de reciclagem.
 
 ---
 
-## 🧪 Exemplos de Uso (cURL)
+## 📚 Exemplos de Uso
 
-### Registrar Doador
+### 1. Registrar Usuário
+
+O registro cria o perfil de acesso e os dados do doador simultaneamente.
 
 ```bash
-curl -X POST http://localhost:9899/api/doadores \
+curl -X POST http://localhost:9899/api/auth/registrar \
   -H "Content-Type: application/json" \
   -d '{
         "nome": "João Silva",
         "email": "joao@email.com",
+        "senha": "senha123",
         "telefone": "(11) 99999-9999",
         "cpf": "123.456.789-00"
       }'
 ```
 
-### Registrar Item
+### 2. Login (Obter Token)
+
+Use as credenciais registradas para receber o Bearer Token necessário para rotas protegidas.
 
 ```bash
-curl -X POST http://localhost:9899/api/itens/doador/1 \
+curl -X POST http://localhost:9899/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-        "material": "Plástico",
-        "pesoEmKg": 2.5,
-        "qtdVolume": 10,
-        "enderecoRetirada": "Rua das Flores, 123"
+        "email": "joao@email.com",
+        "senha": "senha_segura"
       }'
 ```
 
-### Listar Itens Disponíveis
+> **Nota:** Copie o valor de `token` retornado para usar nos próximos comandos.
+
+### 3. Criar Item (Requer Token)
 
 ```bash
-curl -X GET http://localhost:9899/api/associacoes/itens-disponiveis
+curl -X POST http://localhost:9899/api/itens \
+  -H "Authorization: Bearer TOKEN_RECEBIDO" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "material": "Plástico PET",
+        "pesoEmKg": 2.5,
+        "qtdVolume": 10,
+        "urlFoto": "http://link-da-imagem.com/foto.jpg",
+        "enderecoRetirada": "Rua das Flores, 123",
+        "doadorId": 1
+      }'
 ```
 
-### Registrar Associação
+### 3. Registrar uma Associação (Público)
 
 ```bash
 curl -X POST http://localhost:9899/api/associacoes \
   -H "Content-Type: application/json" \
   -d '{
-        "name": "Associação Verde",
+        "nome": "Associação Recicla Mais",
         "cnpj": "12.345.678/0001-90",
-        "email": "contato@verde.org",
-        "phone": "(11) 8888-8888",
-        "address": "Av. Sustentável, 456"
+        "email": "contato@reciclamais.org",
+        "telefone": "(11) 4444-4444",
+        "endereco": "Av. Industrial, 500"
       }'
 ```
 
-## 📁 Estrutura do Projeto
+---
 
-```
-src/
-├── main/
-│   ├── java/com/backend/ecoponto/
-│   │   ├── controller/   # Endpoints REST
-│   │   ├── service/      # Regras de negócio
-│   │   ├── model/        # Entidades JPA
-│   │   ├── repository/   # Acesso a dados
-│   │   └── dto/          # Data Transfer Objects
-│   └── resources/
-│       ├── application.properties.example
-│       └── data.sql      # Dados de exemplo
-└── test/                 # Testes unitários
+## 📖 Documentação e Testes
+
+A documentação interativa das rotas (Swagger) pode ser acessada em:
+
+👉 [http://localhost:9899/swagger-ui.html](http://localhost:9899/swagger-ui.html)
+
+**🚀 Importe o arquivo postman_collection.json no seu Postman para testar todos os fluxos prontamente!**
+
 
 
